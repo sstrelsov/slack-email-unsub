@@ -6,4 +6,4 @@ def api_url(endpoint):
     return f'https://api.iterable.com/api{endpoint}'
 
 def request_body(endpoint):
-    return f'https://api.iterable.com/api{endpoint},headers={api_key}'
+    return f'https://api.iterable.com/api{endpoint},headers={api_key},'
