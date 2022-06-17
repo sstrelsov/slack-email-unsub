@@ -2,10 +2,14 @@ from slack_bolt import App
 import os
 import requests
 from app import rs_cold_marketing_id,rs_reg_marketing_id,marketing_group
-from commands import *
+
+api_key = {'Api_Key': str(os.environ.get('ITERABLE_API_KEY'))}
+
+def url(endpoint):
+    return f'https://api.iterable.com/api{endpoint}'
 
 def validate_email(email,say):
-    response=requests.get(request_body(f'/users/{email}'))
+    response=requests.get(url(f'/users/{email}'),headers=api_key)
     # Use Invalid email response text to confirm valid email format
     if 'Invalid email' in response.text:
         say("ERROR: Invalid email format. Make sure to use 'email@example.com'")
@@ -20,9 +24,9 @@ def validate_email(email,say):
 def manageSub(type,id,email,say):
     # Get user's URL
     if type == "unsub":
-        response = requests.delete(request_body(f'/subscriptions/{marketing_group}/{id}/user/{email}'))
+        response = requests.delete(url(f'/subscriptions/{marketing_group}/{id}/user/{email}'),headers=api_key)
     elif type == "sub":
-        response = requests.patch(request_body(f'/subscriptions/{marketing_group}/{id}/user/{email}'))
+        response = requests.patch(url(f'/subscriptions/{marketing_group}/{id}/user/{email}'),headers=api_key)
     else:
         print("ERROR: Check that type is either 'sub' or 'unsub'")
         return
@@ -35,7 +39,7 @@ def manageSub(type,id,email,say):
 
 def list_subs(say,email):
     # Get user data and isolate id's of channels unsubscribed from
-    response=requests.get(request_body(f'/users/{email}'))
+    response=requests.get(url(f'/users/{email}'),headers=api_key)
     unsubbed_channel_ids = response.json()['user']['dataFields']['unsubscribedChannelIds']
     # Map channel names to channel ids
     channel_ids = [rs_cold_marketing_id,rs_reg_marketing_id]
