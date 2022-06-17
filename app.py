@@ -1,8 +1,6 @@
 import os
 from slack_bolt import App
 from helpers import *
-import requests
-import json
 from dotenv import load_dotenv
 load_dotenv()
 
