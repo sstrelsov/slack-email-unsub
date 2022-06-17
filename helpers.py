@@ -1,11 +1,19 @@
 from slack_bolt import App
 import os
 import requests
-from app import rs_cold_marketing_id,rs_reg_marketing_id,iter_base_url,iterable_api_key,marketing_group
+from app import rs_cold_marketing_id,rs_reg_marketing_id,marketing_group
+
+api_key = {'Api_Key': str(os.environ.get('ITERABLE_API_KEY'))}
+
+def api_url(endpoint):
+    return f'https://api.iterable.com/api{endpoint}'
 
 def validate_email(email,say):
-    url=iter_base_url+'/users/{}?api_key={}'.format(email,iterable_api_key)
-    response=requests.get(url)
+    response=requests.get(
+        api_url(f'/users/{email}'),
+        headers=api_key,
+    )
+    
     # Use Invalid email response text to confirm valid email format
     if 'Invalid email' in response.text:
         say("ERROR: Invalid email format. Make sure to use 'email@example.com'")
@@ -19,11 +27,17 @@ def validate_email(email,say):
 
 def manageSub(type,id,email,say):
     # Get user's URL
-    url = iter_base_url+'/subscriptions/{}/{}/user/{}?api_key={}'.format(marketing_group,id,email,iterable_api_key)
+#    url = iter_base_url+'/subscriptions/{}/{}/user/{}'.format(marketing_group,id,email)
     if type == "unsub":
-        response = requests.delete(url)
+        response = requests.delete(
+            api_url(f'/subscriptions/{marketing_group}/{id}/user/{email}'),
+            headers=api_key,
+        )
     elif type == "sub":
-        response = requests.patch(url)
+        response = requests.patch(
+            api_url(f'/subscriptions/{marketing_group}/{id}/user/{email}'),
+            headers=api_key,
+        )
     else:
         print("ERROR: Check that type is either 'sub' or 'unsub'")
         return
@@ -36,8 +50,11 @@ def manageSub(type,id,email,say):
 
 def list_subs(say,email):
     # Get user data and isolate id's of channels unsubscribed from
-    url=iter_base_url+'/users/{}?api_key={}'.format(email,iterable_api_key)
-    response = requests.get(url)
+   # url=iter_base_url+'/users/{}?api_key={}'.format(email,iterable_api_key)
+    response=requests.get(
+        api_url(f'/users/{email}'),
+        headers=api_key,
+    )
     unsubbed_channel_ids = response.json()['user']['dataFields']['unsubscribedChannelIds']
     # Map channel names to channel ids
     channel_ids = [rs_cold_marketing_id,rs_reg_marketing_id]

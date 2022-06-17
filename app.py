@@ -3,6 +3,8 @@ from slack_bolt import App
 from helpers import *
 import requests
 import json
+from dotenv import load_dotenv
+load_dotenv()
 
 # Initializes your app with your bot token and signing secret
 app = App(
@@ -10,11 +12,10 @@ app = App(
     signing_secret=os.environ.get('SLACK_SIGNING_SECRET')
 )
 
-iterable_api_key=os.environ.get('ITERABLE_API_KEY')
 rs_cold_marketing_id=int(os.environ.get('RS_COLD_MARKETING_ID'))
 rs_reg_marketing_id=int(os.environ.get('RS_REG_MARKETING_ID'))
 marketing_group=os.environ.get('MARKETING_GROUP')
-iter_base_url='https://api.iterable.com/api'
+
 
 @app.command("/list")
 def get_list(ack,say,command):
