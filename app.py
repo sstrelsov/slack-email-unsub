@@ -14,7 +14,6 @@ rs_cold_marketing_id=int(os.environ.get('RS_COLD_MARKETING_ID'))
 rs_reg_marketing_id=int(os.environ.get('RS_REG_MARKETING_ID'))
 marketing_group=os.environ.get('MARKETING_GROUP')
 
-
 @app.command("/list")
 def get_list(ack,say,command):
     # Acknowledge command request

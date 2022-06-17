@@ -2,18 +2,10 @@ from slack_bolt import App
 import os
 import requests
 from app import rs_cold_marketing_id,rs_reg_marketing_id,marketing_group
-
-api_key = {'Api_Key': str(os.environ.get('ITERABLE_API_KEY'))}
-
-def api_url(endpoint):
-    return f'https://api.iterable.com/api{endpoint}'
+from commands import *
 
 def validate_email(email,say):
-    response=requests.get(
-        api_url(f'/users/{email}'),
-        headers=api_key,
-    )
-    
+    response=requests.get(request_body(f'/users/{email}'))
     # Use Invalid email response text to confirm valid email format
     if 'Invalid email' in response.text:
         say("ERROR: Invalid email format. Make sure to use 'email@example.com'")
@@ -27,17 +19,10 @@ def validate_email(email,say):
 
 def manageSub(type,id,email,say):
     # Get user's URL
-#    url = iter_base_url+'/subscriptions/{}/{}/user/{}'.format(marketing_group,id,email)
     if type == "unsub":
-        response = requests.delete(
-            api_url(f'/subscriptions/{marketing_group}/{id}/user/{email}'),
-            headers=api_key,
-        )
+        response = requests.delete(request_body(f'/subscriptions/{marketing_group}/{id}/user/{email}'))
     elif type == "sub":
-        response = requests.patch(
-            api_url(f'/subscriptions/{marketing_group}/{id}/user/{email}'),
-            headers=api_key,
-        )
+        response = requests.patch(request_body(f'/subscriptions/{marketing_group}/{id}/user/{email}'))
     else:
         print("ERROR: Check that type is either 'sub' or 'unsub'")
         return
@@ -50,11 +35,7 @@ def manageSub(type,id,email,say):
 
 def list_subs(say,email):
     # Get user data and isolate id's of channels unsubscribed from
-   # url=iter_base_url+'/users/{}?api_key={}'.format(email,iterable_api_key)
-    response=requests.get(
-        api_url(f'/users/{email}'),
-        headers=api_key,
-    )
+    response=requests.get(request_body(f'/users/{email}'))
     unsubbed_channel_ids = response.json()['user']['dataFields']['unsubscribedChannelIds']
     # Map channel names to channel ids
     channel_ids = [rs_cold_marketing_id,rs_reg_marketing_id]
