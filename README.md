@@ -19,9 +19,6 @@ A private Slack application for quick email unsubscribe (or subscribe) requests.
 
 `/unsub-reg email@example.com` unsubs the user from **RS Marketing** in Iterable
 
-### Show User's Email Lists
-`/list email@example.com` lists all the email lists to which the user is subscribed
-
 ### Subscribe User
 `/sub-all email@example.com` subs the user to **RS Cold** and **RS Marketing** Iterable lists
 
@@ -29,4 +26,5 @@ A private Slack application for quick email unsubscribe (or subscribe) requests.
 
 `/sub-reg email@example.com` subs the user to **RS Marketing** in Iterable
 
-
+### Show User's Email Lists
+`/list email@example.com` lists all the email lists to which the user is subscribed
