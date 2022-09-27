@@ -1,4 +1,4 @@
-# Email Unsubscriber Slack App
+# Customer Email Unsubscriber Slack App
 A private Slack application for quick email unsubscribe (or subscribe) requests. Currently works for Iterable contacts, Hubspot support coming soon.
 
 ## Email Lists Supported
